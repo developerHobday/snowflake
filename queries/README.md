@@ -1,3 +1,4 @@
+A list of some intermediate to complex analytic queries to help me in case I need a syntax / concept refresher.
 
 ## Quickstart
 These queries can be run on the sample database
@@ -8,7 +9,8 @@ USE SCHEMA SNOWFLAKE_SAMPLE_DATA.TPCDS_SF10TCL;
 ```
 
 The default warehouse - small - will take a long time to run the queries.
-Recommended to create another virtual warehouse for optimal runtime.
+Recommended to create a large virtual warehouse for faster runtime.
+Snowflake ran the queries on a 2xlarge warehouse for tuning.
 
 
 ## Future Queries
