@@ -10,26 +10,25 @@ Complexities: cov, multiple iterations, case
 set MONTH = 1;
 set YEAR = 2001;
 
-with my_items as (
-  select w_warehouse_name
-    ,w_warehouse_sk
-    ,i_item_sk
-    ,d_moy
-    ,stddev_samp(inv_quantity_on_hand) stdev
-    ,avg(inv_quantity_on_hand) mean
-  from inventory
-    ,item
-    ,warehouse
-    ,date_dim
-  where inv_item_sk = i_item_sk
-    and inv_warehouse_sk = w_warehouse_sk
-    and inv_date_sk = d_date_sk
-    and d_year = $YEAR
-    and d_moy in ($MONTH, $MONTH+1)
-  group by w_warehouse_name,w_warehouse_sk,i_item_sk,d_moy
-)
-
-create temporary table inv as (
+create or replace temporary table analytics.public.inv as (
+  with my_items as (
+    select w_warehouse_name
+      ,w_warehouse_sk
+      ,i_item_sk
+      ,d_moy
+      ,stddev_samp(inv_quantity_on_hand) stdev
+      ,avg(inv_quantity_on_hand) mean
+    from inventory
+      ,item
+      ,warehouse
+      ,date_dim
+    where inv_item_sk = i_item_sk
+      and inv_warehouse_sk = w_warehouse_sk
+      and inv_date_sk = d_date_sk
+      and d_year = $YEAR
+      and d_moy in ($MONTH, $MONTH+1)
+    group by w_warehouse_name,w_warehouse_sk,i_item_sk,d_moy
+  )
   select w_warehouse_name
     ,w_warehouse_sk
     ,i_item_sk
@@ -52,7 +51,7 @@ select inv1.w_warehouse_sk
   ,inv2.d_moy
   ,inv2.mean
   ,inv2.cov
-from inv inv1,inv inv2
+from analytics.public.inv inv1, analytics.public.inv inv2
 where inv1.i_item_sk = inv2.i_item_sk
   and inv1.w_warehouse_sk =  inv2.w_warehouse_sk
   and inv1.d_moy=$MONTH
@@ -78,7 +77,7 @@ select inv1.w_warehouse_sk
   ,inv2.d_moy
   ,inv2.mean
   ,inv2.cov
-from inv inv1,inv inv2
+from analytics.public.inv inv1, analytics.public.inv inv2
 where inv1.i_item_sk = inv2.i_item_sk
   and inv1.w_warehouse_sk =  inv2.w_warehouse_sk
   and inv1.d_moy=$MONTH
@@ -94,4 +93,4 @@ order by inv1.w_warehouse_sk
   ,inv2.cov
 ;
 
--- 5s on L
+-- ~10s on L

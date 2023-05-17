@@ -45,4 +45,4 @@ group by i_item_id,i_item_desc,i_current_price
 order by i_item_id
 limit 100;
 
--- 26 seconds in L
+-- ~30 seconds in L

@@ -14,7 +14,7 @@ Complexities: sequential style iterations, intersect, union all, rollup
 set YEAR = 1999;
 set DAY = 28;
 
-create temporary table integration_db.public.cross_items as (
+create temporary table analytics.public.cross_items as (
      select i_item_sk ss_item_sk
      from item, (
           select iss.i_brand_id brand_id
@@ -86,7 +86,7 @@ from (
        from store_sales
            ,item
            ,date_dim
-       where ss_item_sk in (select ss_item_sk from integration_db.public.cross_items)
+       where ss_item_sk in (select ss_item_sk from analytics.public.cross_items)
          and ss_item_sk = i_item_sk
          and ss_sold_date_sk = d_date_sk
          and d_year = $YEAR+2 
@@ -98,7 +98,7 @@ from (
        from catalog_sales
            ,item
            ,date_dim
-       where cs_item_sk in (select ss_item_sk from integration_db.public.cross_items)
+       where cs_item_sk in (select ss_item_sk from analytics.public.cross_items)
          and cs_item_sk = i_item_sk
          and cs_sold_date_sk = d_date_sk
          and d_year = $YEAR+2 
@@ -110,7 +110,7 @@ from (
        from web_sales
            ,item
            ,date_dim
-       where ws_item_sk in (select ss_item_sk from integration_db.public.cross_items)
+       where ws_item_sk in (select ss_item_sk from analytics.public.cross_items)
          and ws_item_sk = i_item_sk
          and ws_sold_date_sk = d_date_sk
          and d_year = $YEAR+2
@@ -141,7 +141,7 @@ from (
      from store_sales 
           ,item
           ,date_dim
-     where ss_item_sk in (select ss_item_sk from integration_db.public.cross_items)
+     where ss_item_sk in (select ss_item_sk from analytics.public.cross_items)
      and ss_item_sk = i_item_sk
      and ss_sold_date_sk = d_date_sk
      and d_week_seq = (select d_week_seq
@@ -157,7 +157,7 @@ from (
      from store_sales
           ,item
           ,date_dim
-     where ss_item_sk in (select ss_item_sk from integration_db.public.cross_items)
+     where ss_item_sk in (select ss_item_sk from analytics.public.cross_items)
      and ss_item_sk = i_item_sk
      and ss_sold_date_sk = d_date_sk
      and d_week_seq = (select d_week_seq

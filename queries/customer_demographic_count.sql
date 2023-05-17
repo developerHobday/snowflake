@@ -62,5 +62,5 @@ order by cd_gender,
         cd_credit_rating
  limit 100;
  
- -- 12 seconds on L
+ -- ~10 seconds on L
 

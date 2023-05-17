@@ -60,4 +60,4 @@ order by c_last_name
 limit 100
 ;
 
--- 1 min on L
+-- ~1 min on L

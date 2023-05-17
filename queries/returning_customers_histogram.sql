@@ -67,4 +67,4 @@ group by segment
 order by segment, num_customers
 limit 100;
  
--- 16s on L
+-- ~20s on L

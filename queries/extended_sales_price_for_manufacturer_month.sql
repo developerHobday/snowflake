@@ -23,4 +23,4 @@ order by dt.d_year
      ,brand_id
 limit 100
 ;
--- 40s on L
+-- ~30s on L

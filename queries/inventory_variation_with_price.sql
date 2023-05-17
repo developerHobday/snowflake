@@ -6,19 +6,18 @@ by warehouse.
 Complexities : sum inventory before and after, price change in item, filter out crazy values
 */
 
-set YEAR = 2000;
 set SALES_DATE = '2000-03-11';
 
 with my_items as (
      select i_item_id, i_item_sk 
-     from item current
+     from item as curr
      where i_rec_start_date = $SALES_DATE
           and exists (
                select * 
                from item previous
-               where current.i_item_id = previous.i_item_id
-                    and current.i_rec_start_dt > previous.i_rec_start_dt
-                    and current.i_current_price != previous.i_current_price
+               where curr.i_item_id = previous.i_item_id
+                    and curr.i_rec_start_date > previous.i_rec_start_date
+                    and curr.i_current_price != previous.i_current_price
           )
 )
 
@@ -37,7 +36,7 @@ from (
           ,my_items
           ,date_dim
      where i_item_sk = inv_item_sk
-          and inv_warehouse_s = w_warehouse_sk
+          and inv_warehouse_sk = w_warehouse_sk
           and inv_date_sk = d_date_sk
           and d_date between dateadd(days, -30, TO_DATE($SALES_DATE))
                          and dateadd(days, 30, TO_DATE($SALES_DATE))
