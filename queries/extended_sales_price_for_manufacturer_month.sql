@@ -1,22 +1,26 @@
 -- Report the total extended sales price per item brand per year 
 -- of a specific manufacturer for all store sales in a specific month of the year.
 
- select dt.d_year 
-       ,item.i_brand_id brand_id 
-       ,item.i_brand brand
-       ,sum(ss_ext_sales_price) sum_agg
- from  date_dim dt 
-      ,store_sales
-      ,item
- where dt.d_date_sk = store_sales.ss_sold_date_sk
-   and store_sales.ss_item_sk = item.i_item_sk
-   and item.i_manufact_id = 123
-   and dt.d_moy=11
- group by dt.d_year
-      ,item.i_brand
-      ,item.i_brand_id
- order by dt.d_year
-         ,sum_agg desc
-         ,brand_id
+set MANUFACT_ID = 123;
+set MONTH = 11;
+
+select dt.d_year 
+     ,item.i_brand_id brand_id 
+     ,item.i_brand brand
+     ,sum(ss_ext_sales_price) sum_agg
+from  date_dim dt 
+     ,store_sales
+     ,item
+where dt.d_date_sk = store_sales.ss_sold_date_sk
+and store_sales.ss_item_sk = item.i_item_sk
+and item.i_manufact_id = $MANUFACT_ID
+and dt.d_moy=$MONTH
+group by dt.d_year
+     ,item.i_brand
+     ,item.i_brand_id
+order by dt.d_year
+     ,sum_agg desc
+     ,brand_id
+limit 100
 ;
--- 3 min on XS
+-- 40s on L
